@@ -40,14 +40,19 @@ def main():
     # Start port forwarding
     ssh_target = "{user}@{host}".format_map({
         "host": arguments.controllerHostname,
-        "user": "root",
+        "user": "portforwarding",
     })
     ssh_binding = "{remote_port}:localhost:{local_port}".format_map({
         "local_port": arguments.localPort,
         "remote_port": arguments.remotePort,
     })
-    process = subprocess.Popen(
-        ["ssh", "-p", "22", "-o", "StrictHostKeyChecking=accept-new", "-i", "./id_rsa", "-R", ssh_binding, ssh_target, "-N", "-T", "0.0.0.0"])
+    try:
+        while True:
+            print("Starting connection...")
+            process = subprocess.run(
+                ["ssh", "-p", "722", "-o", "StrictHostKeyChecking=accept-new", "-i", "./id_rsa", "-R", ssh_binding, ssh_target, "-N", "-T", "0.0.0.0"])
+    except KeyboardInterrupt as e:
+        print("Exiting...")
 
 if __name__ == '__main__':
     main()
