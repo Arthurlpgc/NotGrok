@@ -5,6 +5,7 @@ import json
 import requests
 import subprocess
 import sys
+import time
 
 class NullDevice():
     def write(self, s):
@@ -51,6 +52,7 @@ def main():
             print("Starting connection...")
             process = subprocess.run(
                 ["ssh", "-p", "722", "-o", "StrictHostKeyChecking=accept-new", "-i", "./id_rsa", "-R", ssh_binding, ssh_target, "-N", "-T", "0.0.0.0"])
+            time.sleep(1000)
     except KeyboardInterrupt as e:
         print("Exiting...")
 
