@@ -1,5 +1,6 @@
 
 import json
+import requests
 import subprocess
 import sys
 
@@ -20,12 +21,14 @@ with open('config.json', 'r') as config_file:
     processes = []
     for entry in config['routes']:
         print(entry)
+        requests.get(
+            'http://{}/{}/{}'.format(config["host"], entry["subdomain"], entry["remote"]))
         remote_config = "{remote_port}:localhost:{local_port}".format_map({
             "local_port": entry["local"],
             "remote_port": entry["remote"],
         })
         process = subprocess.Popen(
-            ["ssh", "-i", "./id_rsa", "-R", remote_config, host_config, "-N", "-T", "0.0.0.0"])
+            ["ssh", "-o", "StrictHostKeyChecking=accept-new", "-i", "./id_rsa", "-R", remote_config, host_config, "-N", "-T", "0.0.0.0"])
         processes.append(process)
     try:
         for process in processes:

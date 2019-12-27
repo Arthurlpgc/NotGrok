@@ -1,0 +1,16 @@
+{
+  "host": "ngcontrol.banana.com",
+  "routes": [
+    {
+      "local": 5000,
+      "remote": 5000,
+      "subdomain": "homeapi"
+    },
+    {
+      "local": 3000,
+      "remote": 3000,
+      "subdomain": "home"
+    }
+  ],
+  "user": "root"
+}
