@@ -10,7 +10,7 @@ domain = 'arthurlpgc.com'
 
 
 def set_from_maps():
-    os.system('sudo rm -f {}/*'.format(nginx_path))
+    os.system('rm -f {}/*'.format(nginx_path))
     for port in port_to_host.keys():
         subdomain = port_to_host[port]
         with open('{}/{}.conf'.format(nginx_path, str(port)), 'w') as file:
