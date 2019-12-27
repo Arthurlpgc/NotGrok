@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import random
 import requests
 import subprocess
 import sys
@@ -17,21 +18,23 @@ def main():
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Does not grok.')
-    parser.add_argument('--controllerHostname', help='Hostname of the controller server.')
-    parser.add_argument('--localPort', help='Number of the local port.')
-    parser.add_argument('--remotePort', help='Number of the remote port.')
-    parser.add_argument('--subdomain', help='Name of the remote subdomain (for http tunneling only).')
-    arguments = parser.parse_args(sys.argv[1:])
 
-    if arguments.controllerHostname is None:
-        print("error: controllerHostname must be specified")
-        return 1
-    if arguments.localPort is None:
-        print("error: localPort must be specified")
-        return 1
-    if arguments.remotePort is None:
-        print("error: remotePort must be specified")
-        return 1
+    subparsers = parser.add_subparsers(help='Functions')
+    http_parser = subparsers.add_parser('http', help='Set up a subdomain in the remote server.')
+    http_parser.add_argument('-c', '--controllerHostname', help='Hostname of the controller server.', required=True)
+    http_parser.add_argument('-l', '--localPort', type=int, help='Number of the local port.', default=80)
+    http_parser.add_argument('-r', '--remotePort', type=int, help='Number of the remote port.', default=random.randint(10000,60000))
+    http_parser.add_argument('-s', '--subdomain', help='Name of the remote subdomain.', required=True)
+    http_parser.set_defaults(command='http')
+
+
+    tcp_parser = subparsers.add_parser('tcp', help='Set up a subdomain in the remote server.')
+    tcp_parser.add_argument('-c', '--controllerHostname', help='Hostname of the controller server.', required=True)
+    tcp_parser.add_argument('-l', '--localPort', type=int, help='Number of the local port.', required=True)
+    tcp_parser.add_argument('-r', '--remotePort', type=int, help='Number of the remote port.', required=True)
+    tcp_parser.set_defaults(command='tcp')
+
+    arguments = parser.parse_args(sys.argv[1:])
 
     # Register subdomains (for http tunneling only)
     if arguments.subdomain is not None:
