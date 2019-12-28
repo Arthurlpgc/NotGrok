@@ -1,0 +1,4 @@
+#!python
+
+from notgrok import main
+main()
